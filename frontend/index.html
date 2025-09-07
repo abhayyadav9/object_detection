@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Object Detection Frontend</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Image Object Detection</h1>
+        <div class="upload-section">
+            <input type="file" id="imageUpload" accept="image/*">
+            <button id="detectButton" disabled>Detect Objects</button>
+        </div>
+        <div class="image-display-section">
+            <div class="image-wrapper">
+                <img id="uploadedImage" src="#" alt="Uploaded Image">
+                <canvas id="detectionCanvas"></canvas>
+            </div>
+        </div>
+        <div class="log-section">
+            <h2>Backend Response Log</h2>
+            <pre id="responseLog"></pre>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
