@@ -3,21 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Object Detection Frontend</title>
+    <title>Real-time Object Detection Stream</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h1>Image Object Detection</h1>
-        <div class="upload-section">
-            <input type="file" id="imageUpload" accept="image/*">
-            <button id="detectButton" disabled>Detect Objects</button>
+        <h1>Real-time Webcam Object Detection</h1>
+        <div class="video-container">
+            <video id="webcamFeed" autoplay playsinline></video>
+            <canvas id="detectionCanvas"></canvas>
         </div>
-        <div class="image-display-section">
-            <div class="image-wrapper">
-                <img id="uploadedImage" src="#" alt="Uploaded Image">
-                <canvas id="detectionCanvas"></canvas>
-            </div>
+        <div class="controls">
+            <button id="startButton">Start Webcam</button>
+            <button id="stopButton" disabled>Stop Webcam</button>
+        </div>
+        <div class="log-section1">
+            <h2>result:_</h2>
+            <pre id="responseLog1"></pre>
         </div>
         <div class="log-section">
             <h2>Backend Response Log</h2>
