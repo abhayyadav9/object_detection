@@ -14,7 +14,7 @@ class Config:
     # Path to the YOLOv8 model weights (e.g., .pt, .onnx, or .engine)
     YOLO_MODEL_PATH: str = os.getenv("YOLO_MODEL_PATH", "backend/app/models/yolo/yolov8n.pt")
     # Confidence threshold for object detection. Detections below this are ignored.
-    CONFIDENCE_THRESHOLD: float = float(os.getenv("CONFIDENCE_THRESHOLD", "0.7"))
+    CONFIDENCE_THRESHOLD: float = float(os.getenv("CONFIDENCE_THRESHOLD", "0.3"))
     # IoU (Intersection over Union) threshold for Non-Maximum Suppression (NMS).
     IOU_THRESHOLD: float = float(os.getenv("IOU_THRESHOLD", "0.45"))
     # Device to run inference on (e.g., "cuda:0" for GPU, "cpu" for CPU).

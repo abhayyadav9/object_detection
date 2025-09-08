@@ -5,18 +5,37 @@ const detectionCanvas = document.getElementById('detectionCanvas');
 const responseLog = document.getElementById('responseLog');
 const responseLog1 = document.getElementById('responseLog1');
 
+// Store unique detected classes
+const detectedClassesSet = new Set();
+
 const ctx = detectionCanvas.getContext('2d');
 const videoElement = document.createElement('video'); // Hidden video element for capturing frames
 
-const backendUrl = 'http://127.0.0.1:8000';
-const detectionIntervalMs = 200; // Send frame every 200ms
+// Auto-detect backend URL for local network/mobile use
+// By default, use the same host as the frontend, but allow override for local testing
+let backendUrl = '';
+if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    backendUrl = 'http://127.0.0.1:8000'; // For local desktop testing
+} else {
+    // Use the same host as the frontend, but port 8000
+    backendUrl = `${window.location.protocol}//${window.location.hostname}:8000`;
+}
+// To force a specific IP (e.g., for debugging), uncomment and set below:
+// backendUrl = 'http://192.168.1.10:8000';
+const detectionIntervalMs = 1000; // Send frame every 1 second
 
 let mediaStream = null;
 let captureIntervalId = null;
 
 startButton.addEventListener('click', async () => {
     try {
-        mediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
+        // Prefer back camera on mobile devices
+        const constraints = {
+            video: {
+                facingMode: { ideal: 'environment' }
+            }
+        };
+        mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
         webcamFeed.srcObject = mediaStream;
         webcamFeed.play();
 
@@ -82,9 +101,31 @@ function startFrameCapture() {
                     });
 
                     const result = await response.json();
-                                        responseLog1.textContent = result.data
 
-                    responseLog.textContent = JSON.stringify(result, null, 2);
+                    // Show detailed detection results in responseLog every interval
+                    if (Array.isArray(result) && result.length > 0 && result[0].class) {
+                        let logText = 'Detected Objects (' + new Date().toLocaleTimeString() + '):\n';
+                        result.forEach((det, idx) => {
+                            logText += `#${idx + 1}:\n`;
+                            logText += `  Class: ${det.class}\n`;
+                            logText += `  Confidence: ${(det.confidence * 100).toFixed(1)}%\n`;
+                            logText += `  Box: [${det.box.join(', ')}]\n`;
+                            // Only store high accuracy detections (confidence > 0.7)
+                            if (det.confidence > 0.5) {
+                                detectedClassesSet.add(det.class);
+                            }
+                        });
+                        responseLog.textContent = logText;
+                    } else {
+                        responseLog.textContent = 'No objects detected.';
+                    }
+
+                    // Display the set of unique detected classes on screen
+                    if (detectedClassesSet.size > 0) {
+                        responseLog1.textContent = 'Unique objects detected so far:\n' + Array.from(detectedClassesSet).join(', ');
+                    } else {
+                        responseLog1.textContent = 'No unique objects detected yet.';
+                    }
 
                     if (response.ok) {
                         drawDetections(result);
