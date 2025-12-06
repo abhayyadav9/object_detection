@@ -1,8 +1,6 @@
-version: "3.9"
-
 services:
   rpibackend:
-    build: .
+    image: rpibackend:latest
     container_name: rpibackend
     ports:
       - "5001:5001"

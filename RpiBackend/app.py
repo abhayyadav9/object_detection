@@ -75,7 +75,7 @@ def detect():
     return jsonify(build_response(detections, persons, activities, raw_text, meaning))
 
 
-@app.route("/health")
+@app.route("/health", methods=["GET"])
 def health():
     return jsonify({"status": "running", "loaded": models_loaded})
 
