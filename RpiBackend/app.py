@@ -12,6 +12,8 @@ from utils.preprocess import preprocess
 from utils.pose_utils import analyze_pose
 from utils.ocr_utils import clean_and_format_text
 from utils.response_builder import build_response
+from utils.helperfunctionOcr import extract_text_from_variants
+
 
 from config.settings import CONF_THRESHOLD
 
@@ -69,8 +71,19 @@ def detect():
             })
 
     # OCR + Meaning
-    raw_text = extract_text(img)
+    
+    # OCR Super Pipeline
+    texts = extract_text_from_variants(img)
+
+# merge multiple text chunks
+    merged_text = " ".join(set([t.strip() for t in texts if t.strip()]))
+
+    raw_text = merged_text
     meaning  = clean_and_format_text(raw_text)
+
+    
+    
+    
 
     return jsonify(build_response(detections, persons, activities, raw_text, meaning))
 
