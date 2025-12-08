@@ -1,8 +1,10 @@
 import pytesseract
 import cv2
+import platform
 
-# ✅ MUST POINT TO EXE FILE, NOT FOLDER
-pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+# Auto-detect OS → set tesseract path only on Windows
+if platform.system() == "Windows":
+    pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
 def extract_text(img):
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
